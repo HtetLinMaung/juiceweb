@@ -1,0 +1,92 @@
+@import url("/css/sweetalert2.min.css");
+
+@font-face {
+  font-family: "Poppins";
+  src: url("/fonts/Poppins-Regular.ttf") format("truetype");
+}
+
+:root {
+  --background-color: #fffafe;
+  --primary-color: #c990ff;
+  --font-family: "Poppins";
+  font-size: 12px;
+}
+
+html,
+body {
+  background-color: var(--background-color);
+  padding: 0;
+  margin: 0;
+  font-family: var(--font-family);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.btn {
+  border-radius: 0.9rem;
+  transition: all 0.5s;
+  transition-timing-function: ease-out;
+}
+.btn:active {
+  box-shadow: none;
+  transform: scale(0.8);
+}
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:focus {
+  border-color: var(--primary-color);
+  background-color: var(--primary-color);
+  box-shadow: none;
+}
+.card {
+  border-radius: 1.5rem;
+  border: 0;
+  transition: all 0.5s;
+  color: black;
+  box-shadow: 0 0 6px 3px rgb(201, 144, 255, 0.2);
+  transition-timing-function: ease-out;
+}
+.signup-card {
+  min-width: 350px;
+}
+.signup-card .form-control {
+  font-size: 12px;
+}
+.signup-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 6px 3px rgb(201, 144, 255, 0.4);
+}
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.form-control {
+  padding: 0.7rem;
+  border-radius: 0.5rem;
+  transition: all 0.4s;
+  transition-timing-function: ease-out;
+}
+nav {
+  z-index: 10;
+  background-color: var(--background-color);
+}
+.table td {
+  border: 0;
+  vertical-align: middle;
+}
+.form-check-input {
+  font-size: 1.5rem;
+}
+/* .custom-modal {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  left: 0;
+  top: 0;
+} */
