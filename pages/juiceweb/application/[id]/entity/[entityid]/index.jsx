@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useData } from "../../../../../../hooks/custom-hooks";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import rest from "../../../../../../utils/rest";
+import Link from "next/link";
 
 const initState = {
   name: "",
@@ -25,11 +26,13 @@ export default function AddEntity() {
   const [state, setState] = useData(initState);
   const [entityid, setEntityid] = useState("add");
   const [sequences, setSequences] = useState([]);
+  const [appname, setAppname] = useState("");
 
   const fetchEntity = async () => {
     const [res, err] = await rest.get(`/api/entities/${router.query.entityid}`);
     if (!err) {
       setState({ ...res.data.data });
+      setAppname(localStorage.getItem("appname"));
     }
   };
 
@@ -118,6 +121,30 @@ export default function AddEntity() {
 
   return (
     <div className="container" style={{ paddingTop: "9rem" }}>
+      <div className="mb-5">
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
+              <Link href="/juiceweb/application">
+                <a>Application</a>
+              </Link>
+            </li>
+            <li className="breadcrumb-item">
+              <Link href={`/juiceweb/application/${router.query.id}`}>
+                <a>{appname || router.query.id}</a>
+              </Link>
+            </li>
+            <li className="breadcrumb-item ">
+              <Link href={`/juiceweb/application/${router.query.id}/entity`}>
+                <a>Entity</a>
+              </Link>
+            </li>
+            <li className="breadcrumb-item active" aria-current="page">
+              {router.query.entityid}
+            </li>
+          </ol>
+        </nav>
+      </div>
       <h2 className="mb-5">
         {entityid == "add" ? "Create New Entity" : state.name}
       </h2>

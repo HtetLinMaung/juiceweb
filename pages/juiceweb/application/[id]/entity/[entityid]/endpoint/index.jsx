@@ -5,6 +5,7 @@ import moment from "moment";
 import { useData } from "../../../../../../../hooks/custom-hooks";
 import ColoredButton from "../../../../../../../components/ColoredButton";
 import config from "../../../../../../../app.config.json";
+import Link from "next/link";
 
 const initState = {
   search: "",
@@ -14,6 +15,7 @@ export default function EndPoint() {
   const router = useRouter();
   const [items, setItems] = useState([]);
   const [state, setState] = useData(initState);
+  const [appname, setAppname] = useState("");
 
   const fetchEndpoints = async () => {
     if (router.query.entityid && router.query.id) {
@@ -22,6 +24,7 @@ export default function EndPoint() {
       );
       if (!err) {
         setItems(res.data.data);
+        setAppname(localStorage.getItem("appname"));
         // const [res2, err2] = await rest.get(
         //   `/api/endpoints?appid=${router.query.id}&name=auth/token/get-app-token`
         // );
@@ -54,7 +57,38 @@ export default function EndPoint() {
 
   return (
     <div className="container" style={{ paddingTop: "9rem" }}>
-      <h2 className="mb-5">EndPoint</h2>
+      <div className="mb-5">
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
+              <Link href="/juiceweb/application">
+                <a>Application</a>
+              </Link>
+            </li>
+            <li className="breadcrumb-item">
+              <Link href={`/juiceweb/application/${router.query.id}`}>
+                <a>{appname || router.query.id}</a>
+              </Link>
+            </li>
+            <li className="breadcrumb-item ">
+              <Link href={`/juiceweb/application/${router.query.id}/entity`}>
+                <a>Entity</a>
+              </Link>
+            </li>
+            <li className="breadcrumb-item">
+              <Link
+                href={`/juiceweb/application/${router.query.id}/entity/${router.query.entityid}`}
+              >
+                <a>{router.query.entityid}</a>
+              </Link>
+            </li>
+            <li className="breadcrumb-item active" aria-current="page">
+              EndPoint
+            </li>
+          </ol>
+        </nav>
+      </div>
+      {/* <h2 className="mb-5">EndPoint</h2> */}
       <div className="row mb-3">
         <div className="col-md-3">
           <input

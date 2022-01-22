@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useData } from "../../../../hooks/custom-hooks";
 import rest from "../../../../utils/rest";
+import Link from "next/link";
 
 const initState = {
   _id: "",
@@ -20,6 +21,7 @@ export default function ApplicationDetail() {
         setState({
           ...res.data.data,
         });
+        localStorage.setItem("appname", res.data.data.appname);
       }
     }
   };
@@ -30,7 +32,21 @@ export default function ApplicationDetail() {
 
   return (
     <div className="container" style={{ paddingTop: "9rem" }}>
-      <h2 className="mb-5">{state.appname}</h2>
+      <div className="mb-5">
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
+              <Link href="/juiceweb/application">
+                <a>Application</a>
+              </Link>
+            </li>
+            <li className="breadcrumb-item active" aria-current="page">
+              {state.appname}
+            </li>
+          </ol>
+        </nav>
+      </div>
+      {/* <h2 className="mb-5">{state.appname}</h2> */}
       <div className="d-flex " style={{ flexWrap: "wrap" }}>
         <button
           onClick={() => {

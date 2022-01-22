@@ -90,3 +90,6 @@ nav {
   left: 0;
   top: 0;
 } */
+.breadcrumb-item {
+  font-size: 1.4rem;
+}

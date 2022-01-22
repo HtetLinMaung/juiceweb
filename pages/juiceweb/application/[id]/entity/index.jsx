@@ -2,11 +2,13 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import rest from "../../../../../utils/rest";
 import moment from "moment";
+import Link from "next/link";
 
 export default function Entity() {
   const router = useRouter();
   const [items, setItems] = useState([]);
   const [search, setSearch] = useState("");
+  const [appname, setAppname] = useState("");
 
   const fetchEntities = async () => {
     if (router.query.id) {
@@ -15,6 +17,7 @@ export default function Entity() {
       );
       if (!err) {
         setItems(res.data.data);
+        setAppname(localStorage.getItem("appname"));
       }
     }
   };
@@ -25,7 +28,26 @@ export default function Entity() {
 
   return (
     <div className="container" style={{ paddingTop: "9rem" }}>
-      <h2 className="mb-5">Entity</h2>
+      <div className="mb-5">
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
+              <Link href="/juiceweb/application">
+                <a>Application</a>
+              </Link>
+            </li>
+            <li className="breadcrumb-item">
+              <Link href={`/juiceweb/application/${router.query.id}`}>
+                <a>{appname || router.query.id}</a>
+              </Link>
+            </li>
+            <li className="breadcrumb-item active" aria-current="page">
+              Entity
+            </li>
+          </ol>
+        </nav>
+      </div>
+      {/* <h2 className="mb-5">Entity</h2> */}
       <div
         className="row mb-3"
         style={{ justifyContent: "space-between", alignItems: "center" }}

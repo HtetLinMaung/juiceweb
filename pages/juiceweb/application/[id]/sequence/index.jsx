@@ -2,13 +2,16 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import rest from "../../../../../utils/rest";
 import moment from "moment";
+import Link from "next/link";
 
 export default function Sequence() {
   const router = useRouter();
   const [items, setItems] = useState([]);
   const [search, setSearch] = useState("");
+  const [appname, setAppname] = useState("");
 
   const fetchSequences = async () => {
+    setAppname(localStorage.getItem("appname"));
     if (router.query.id) {
       const [res, err] = await rest.get(
         `/api/sequences?appid=${router.query.id}&search=${search}`
@@ -25,7 +28,26 @@ export default function Sequence() {
 
   return (
     <div className="container" style={{ paddingTop: "9rem" }}>
-      <h2 className="mb-5">Sequence</h2>
+      <div className="mb-5">
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
+              <Link href="/juiceweb/application">
+                <a>Application</a>
+              </Link>
+            </li>
+            <li className="breadcrumb-item">
+              <Link href={`/juiceweb/application/${router.query.id}`}>
+                <a>{appname || router.query.id}</a>
+              </Link>
+            </li>
+            <li className="breadcrumb-item active" aria-current="page">
+              Sequence
+            </li>
+          </ol>
+        </nav>
+      </div>
+      {/* <h2 className="mb-5">Sequence</h2> */}
       <div
         className="row mb-3"
         style={{ justifyContent: "space-between", alignItems: "center" }}

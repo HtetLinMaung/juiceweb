@@ -8,6 +8,7 @@ import config from "../../../../../../../../app.config.json";
 import axios from "axios";
 import moment from "moment";
 import Swal from "sweetalert2";
+import Link from "next/link";
 
 const initState = {
   name: "",
@@ -25,6 +26,7 @@ export default function EndPointDetail() {
   const [body, setBody] = useState("");
   const [duration, setDuration] = useState(0);
   const [token, setToken] = useState("");
+  const [appname, setAppname] = useState("");
 
   const generateToken = async (userid, password) => {
     const [res, err] = await iamrest.post("/auth/login", {
@@ -73,6 +75,7 @@ export default function EndPointDetail() {
 
   useEffect(() => {
     const click = localStorage.getItem("click");
+    setAppname(localStorage.getItem("appname"));
     if (state.url && click == "yes") {
       requestHandler();
       localStorage.setItem("click", "no");
@@ -133,7 +136,45 @@ export default function EndPointDetail() {
 
   return (
     <div className="container" style={{ paddingTop: "9rem" }}>
-      <h2 className="mb-5">{state.name}</h2>
+      <div className="mb-5">
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
+              <Link href="/juiceweb/application">
+                <a>Application</a>
+              </Link>
+            </li>
+            <li className="breadcrumb-item">
+              <Link href={`/juiceweb/application/${router.query.id}`}>
+                <a>{appname || router.query.id}</a>
+              </Link>
+            </li>
+            <li className="breadcrumb-item ">
+              <Link href={`/juiceweb/application/${router.query.id}/entity`}>
+                <a>Entity</a>
+              </Link>
+            </li>
+            <li className="breadcrumb-item">
+              <Link
+                href={`/juiceweb/application/${router.query.id}/entity/${router.query.entityid}`}
+              >
+                <a>{router.query.entityid}</a>
+              </Link>
+            </li>
+            <li className="breadcrumb-item">
+              <Link
+                href={`/juiceweb/application/${router.query.id}/entity/${router.query.entityid}/endpoint`}
+              >
+                <a>EndPoint</a>
+              </Link>
+            </li>
+            <li className="breadcrumb-item active" aria-current="page">
+              {state.name}
+            </li>
+          </ol>
+        </nav>
+      </div>
+      {/* <h2 className="mb-5">{state.name}</h2> */}
       <div className="d-flex mb-5">
         <button
           onClick={() => updateEndpoint({ key: state.key })}
@@ -261,51 +302,50 @@ export default function EndPointDetail() {
         ""
       )}
 
-      <h5>Request</h5>
-      <pre
-        id="body"
-        contentEditable="true"
-        className="card"
-        style={{
-          backgroundColor: "#FFFFFF",
-          height: 250,
-          borderRadius: "1rem",
-          padding: "1rem",
-          outline: "none",
-          overflow: "auto",
-          marginBottom: "2rem",
-          fontSize: "1.2rem",
-        }}
-      >
-        {body}
-      </pre>
-
-      <div className="d-flex" style={{ justifyContent: "space-between" }}>
-        <h5>Response</h5>
-        <div>{moment.duration(duration).asSeconds()} s</div>
-      </div>
-
-      <pre
-        id="result"
-        style={{
-          backgroundColor: "black",
-          height: 300,
-          borderRadius: "1rem",
-          padding: "1rem",
-          overflowY: "auto",
-          marginBottom: "2rem",
-          color: "white",
-          fontSize: "1.2rem",
-        }}
-      >
-        <code> {result}</code>
-      </pre>
-
-      {/* <div className="custom-modal">
-        <div className="card">
-          <h1>Modal</h1>
+      <div className="row">
+        <div className="col-md-6">
+          <h5>Request</h5>
+          <pre
+            id="body"
+            contentEditable="true"
+            className="card"
+            style={{
+              backgroundColor: "#FFFFFF",
+              height: 300,
+              borderRadius: "1rem",
+              padding: "1rem",
+              outline: "none",
+              overflow: "auto",
+              marginBottom: "2rem",
+              fontSize: "1.2rem",
+            }}
+          >
+            {body}
+          </pre>
         </div>
-      </div> */}
+        <div className="col-md-6">
+          <div className="d-flex" style={{ justifyContent: "space-between" }}>
+            <h5>Response</h5>
+            <div>{moment.duration(duration).asSeconds()} s</div>
+          </div>
+
+          <pre
+            id="result"
+            style={{
+              backgroundColor: "black",
+              height: 300,
+              borderRadius: "1rem",
+              padding: "1rem",
+              overflowY: "auto",
+              marginBottom: "2rem",
+              color: "white",
+              fontSize: "1.2rem",
+            }}
+          >
+            <code> {result}</code>
+          </pre>
+        </div>
+      </div>
     </div>
   );
 }
