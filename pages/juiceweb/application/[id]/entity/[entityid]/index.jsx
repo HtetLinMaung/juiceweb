@@ -16,7 +16,7 @@ const initState = {
       defaultvalue: "",
       isunique: false,
       issequence: false,
-      sequenceid: "",
+      seqheaderid: "",
     },
   ],
 };
@@ -65,7 +65,7 @@ export default function AddEntity() {
         defaultvalue: "",
         isunique: false,
         issequence: false,
-        sequenceid: null,
+        seqheaderid: "",
       },
     ];
     setState({ columns });
@@ -81,9 +81,21 @@ export default function AddEntity() {
     setState({ columns: state.columns.filter((c, i) => i != index) });
   };
 
+  const getBody = () => {
+    const body = { ...state };
+    body.columns = [...state.columns].map((c) => {
+      if (!c.seqheaderid) {
+        c.seqheaderid = null;
+      }
+      return c;
+    });
+
+    return body;
+  };
+
   const saveEntity = async () => {
     const [res, err] = await rest.post("/api/entities", {
-      ...state,
+      ...getBody(),
       appid: router.query.id,
     });
     if (!err) {
@@ -95,7 +107,7 @@ export default function AddEntity() {
     const [res, err] = await rest.put(
       `/api/entities/${router.query.entityid}`,
       {
-        ...state,
+        ...getBody(),
       }
     );
     if (!err) {
@@ -120,7 +132,7 @@ export default function AddEntity() {
   };
 
   return (
-    <div className="container" style={{ paddingTop: "9rem" }}>
+    <div className="container" style={{ paddingTop: "6rem" }}>
       <div className="mb-5">
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
@@ -266,7 +278,7 @@ export default function AddEntity() {
         {state.columns.map((column, i) => (
           <div
             key={i}
-            className="row center mb-3"
+            className="row center mb-4"
             style={{ justifyContent: "flex-start" }}
           >
             <div className="col-md-2">
@@ -339,9 +351,9 @@ export default function AddEntity() {
               <div className="col-md-2">
                 <select
                   className="form-control"
-                  value={column.sequenceid}
+                  value={column.seqheaderid}
                   onChange={(e) => {
-                    const payload = { sequenceid: e.target.value };
+                    const payload = { seqheaderid: e.target.value };
                     const sequence = sequences.find(
                       (seq) => seq._id == e.target.value
                     );
@@ -396,7 +408,7 @@ export default function AddEntity() {
                   onChange={(e) => {
                     const payload = {
                       issequence: e.target.checked,
-                      sequenceid: e.target.checked ? sequences[0]._id : "",
+                      seqheaderid: e.target.checked ? sequences[0]._id : "",
                     };
                     if (e.target.checked) {
                       if (

@@ -47,6 +47,7 @@ export default function Login() {
             </div>
             <input
               type="text"
+              name="username"
               className="form-control"
               value={state.userid}
               onChange={(e) => setState({ userid: e.target.value })}
@@ -57,6 +58,7 @@ export default function Login() {
               Password
             </div>
             <input
+              name="password"
               type="password"
               className="form-control"
               value={state.password}

@@ -1,5 +1,5 @@
 {
   "iam": "http://150.95.82.125/iam",
-  "server": "http://localhost:5200/juice",
-  "server_domain": "http://localhost:5200"
+  "server": "http://150.95.82.125:7070/juice",
+  "server_domain": "http://150.95.82.125:7070"
 }

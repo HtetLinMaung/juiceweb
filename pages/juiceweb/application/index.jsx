@@ -19,7 +19,7 @@ export default function Application() {
   }, []);
 
   return (
-    <div className="container" style={{ paddingTop: "9rem" }}>
+    <div className="container" style={{ paddingTop: "6rem" }}>
       <div className="mb-5">
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">

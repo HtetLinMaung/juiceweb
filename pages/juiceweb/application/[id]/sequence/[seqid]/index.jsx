@@ -3,13 +3,14 @@ import { useState, useEffect } from "react";
 import { useData } from "../../../../../../hooks/custom-hooks";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import rest from "../../../../../../utils/rest";
+import Link from "next/link";
 
 const initState = {
   rulename: "",
   format: "{seqno}",
   prefixchar: "0",
   mindigitlength: 1,
-  rules: [
+  details: [
     {
       types: [
         {
@@ -17,7 +18,7 @@ const initState = {
           sr: 1,
         },
       ],
-      seqno: 1,
+      initseqno: 1,
       step: 1,
     },
   ],
@@ -28,38 +29,39 @@ export default function SequenceDetail() {
   const [state, setState] = useData({ ...initState });
   const [seqid, setSeqid] = useState("add");
   const [typecount, setTypecount] = useState(1);
+  const [appname, setAppname] = useState("");
 
   const addRule = () => {
-    const rules = [...state.rules];
+    const details = [...state.details];
     const types = [];
     for (let i = 1; i <= typecount; i++) {
       types.push({ type: "", sr: i });
     }
-    rules.push({
+    details.push({
       types,
-      seqno: 1,
+      initseqno: 1,
       step: 1,
     });
-    setState({ rules });
+    setState({ details });
   };
 
   const setType = (index, type, sr) => {
-    const rules = [...state.rules];
-    for (const t of rules[index].types) {
+    const details = [...state.details];
+    for (const t of details[index].types) {
       if (t.sr == sr) {
         t.type = type;
         break;
       }
     }
-    setState({ rules });
+    setState({ details });
   };
 
   const setRuleItem = (index, payload) => {
-    const rules = [...state.rules];
+    const details = [...state.details];
     for (const [k, v] of Object.entries(payload)) {
-      rules[index][k] = v;
+      details[index][k] = v;
     }
-    setState({ rules });
+    setState({ details });
   };
 
   const fetchSequence = async () => {
@@ -70,6 +72,7 @@ export default function SequenceDetail() {
   };
 
   useEffect(() => {
+    setAppname(localStorage.getItem("appname"));
     if (router.query.seqid && router.query.seqid != "add") {
       setSeqid(router.query.seqid);
       fetchSequence();
@@ -114,10 +117,34 @@ export default function SequenceDetail() {
   };
 
   return (
-    <div className="container" style={{ paddingTop: "9rem" }}>
-      <h2 className="mb-5">
+    <div className="container" style={{ paddingTop: "6rem" }}>
+      <div className="mb-5">
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
+              <Link href="/juiceweb/application">
+                <a>Application</a>
+              </Link>
+            </li>
+            <li className="breadcrumb-item">
+              <Link href={`/juiceweb/application/${router.query.id}`}>
+                <a>{appname || router.query.id}</a>
+              </Link>
+            </li>
+            <li className="breadcrumb-item">
+              <Link href={`/juiceweb/application/${router.query.id}/sequence`}>
+                <a>Sequence</a>
+              </Link>
+            </li>
+            <li className="breadcrumb-item active" aria-current="page">
+              {seqid == "add" ? "Create New Sequence" : state.rulename}
+            </li>
+          </ol>
+        </nav>
+      </div>
+      {/* <h2 className="mb-5">
         {seqid == "add" ? "Create New Sequence" : state.rulename}
-      </h2>
+      </h2> */}
 
       <div className="d-flex mb-5">
         {seqid == "add" ? (
@@ -245,26 +272,29 @@ export default function SequenceDetail() {
             onChange={(e) => {
               setTypecount(e.target.value);
               if (e.target.value >= 1) {
-                const rules = [...state.rules];
-                for (const rule of rules) {
-                  while (rule.types.length != e.target.value) {
-                    if (rule.types.length > e.target.value) {
-                      rule.types.pop();
-                    } else if (rule.types.length < e.target.value) {
-                      rule.types.push({ type: "", sr: rule.types.length + 1 });
+                const details = [...state.details];
+                for (const detail of details) {
+                  while (detail.types.length != e.target.value) {
+                    if (detail.types.length > e.target.value) {
+                      detail.types.pop();
+                    } else if (detail.types.length < e.target.value) {
+                      detail.types.push({
+                        type: "",
+                        sr: detail.types.length + 1,
+                      });
                     }
                   }
                 }
-                setState({ rules });
+                setState({ details });
               }
             }}
           />
         </div>
       </div>
 
-      {state.rules.map((rule, i) => (
-        <div key={`rule_${i}`} className="row mb-3">
-          {rule.types.map((type) => (
+      {state.details.map((detail, i) => (
+        <div key={`detail_${i}`} className="row mb-3">
+          {detail.types.map((type) => (
             <div key={type.sr} className="col-md-2">
               <label style={{ lineHeight: "2.5rem" }}>Type</label>
               <input
@@ -276,12 +306,12 @@ export default function SequenceDetail() {
             </div>
           ))}
           <div className="col-md-2">
-            <label style={{ lineHeight: "2.5rem" }}>Sequence No.</label>
+            <label style={{ lineHeight: "2.5rem" }}>Initial Sequence No.</label>
             <input
               type="number"
               className="form-control"
-              value={rule.seqno}
-              onChange={(e) => setRuleItem(i, { seqno: e.target.value })}
+              value={detail.initseqno}
+              onChange={(e) => setRuleItem(i, { initseqno: e.target.value })}
             />
           </div>
           <div className="col-md-2">
@@ -289,7 +319,7 @@ export default function SequenceDetail() {
             <input
               type="number"
               className="form-control"
-              value={rule.step}
+              value={detail.step}
               onChange={(e) => setRuleItem(i, { step: e.target.value })}
             />
           </div>

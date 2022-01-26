@@ -31,7 +31,7 @@ export default function ApplicationDetail() {
   }, [router.query.id]);
 
   return (
-    <div className="container" style={{ paddingTop: "9rem" }}>
+    <div className="container" style={{ paddingTop: "6rem" }}>
       <div className="mb-5">
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
